@@ -1,5 +1,15 @@
 apply plugin: 'com.android.application'
 
+def getApiKey() {
+    def Properties props = new Properties()
+    try {
+        props.load(new FileInputStream(project.file('secrets.properties')))
+    } catch (Exception e) {
+        return ""
+    }
+    return props['API_KEY']
+}
+
 android {
     compileSdkVersion 27
     defaultConfig {
@@ -15,6 +25,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            buildConfigField "String", "API_KEY", "\"" + getApiKey() +"\""
+        }
     }
 }
 
@@ -25,4 +38,5 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    implementation 'com.mcxiaoke.volley:library:1.0.19'
 }
